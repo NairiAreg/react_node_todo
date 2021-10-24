@@ -1,7 +1,79 @@
 @import "../vars.scss";
 
+.collapsed {
+  width: 50px !important;
+  align-items: center;
+}
+
 #leftPanel {
-  width: 315px;
-  height:100vh;
+  width: 320px;
+  height: 100vh;
   background-color: $mainDark;
+  overflow: hidden;
+  &.collapsed {
+    .leftPanelBody > div > *:not(:first-child) {
+      display: none !important;
+    }
+    .leftPanelBody > div {
+      justify-content: center;
+      > *:first-child {
+        padding: 0;
+      }
+    }
+  }
+  .menuToggleIcon {
+    right: 0;
+  }
+  .leftPanelBody {
+    // min-width: 320px;
+    > * {
+      margin: 10px 0;
+    }
+    .profile {
+      img {
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+      }
+      h5 {
+        color: $white;
+      }
+      span {
+        color: $mainText;
+      }
+    }
+    .searchBox {
+      div {
+        width: fill-available;
+        #search {
+          color: $white;
+        }
+        div {
+          &::after {
+            border-color: $white;
+          }
+          &::before {
+            border-color: $mainText;
+          }
+        }
+        label {
+          color: $mainText;
+          &.Mui-focused {
+            color: $white;
+          }
+        }
+      }
+      svg {
+        color: $mainText;
+      }
+    }
+    button {
+      border-color: $mainText;
+      color: $mainText;
+      min-width: unset;
+      > span {
+        margin: 0;
+      }
+    }
+  }
 }
