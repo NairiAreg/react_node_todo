@@ -1,15 +1,32 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './LeftPanel.scss'
 import {
   Menu as MenuIcon,
   Search as SearchIcon,
   Today,
+  StarBorder,
+  DateRange,
+  TaskAlt,
+  FormatListNumbered,
+  PlaylistAddCheck,
 } from '@mui/icons-material'
-import { IconButton, TextField, Box, Tooltip, Button } from '@mui/material'
+import {
+  IconButton,
+  TextField,
+  Box,
+  Tooltip,
+  Button,
+  Divider,
+} from '@mui/material'
 
 function App() {
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false)
-  useEffect(() => {}, [])
+  // const [searchFocus, setSearchFocus] = useState(false)
+  const searchRef = useRef(null)
+  useEffect(() => {
+    // leftPanelCollapsed && setSearchFocus(false)
+      // searchRef?.current?.focus?.();
+  })
   return (
     <div
       id="leftPanel"
@@ -23,12 +40,7 @@ function App() {
       >
         <MenuIcon fontSize="large" />
       </IconButton>
-      <div
-        className="leftPanelBody d-flex flex-column mt-5"
-        onClick={() =>
-          leftPanelCollapsed && setLeftPanelCollapsed(!leftPanelCollapsed)
-        }
-      >
+      <div className="leftPanelBody d-flex flex-column mt-5">
         <div className="profile d-flex">
           <Tooltip title="Profile">
             <IconButton>
@@ -44,8 +56,15 @@ function App() {
           className={`searchBox d-flex align-items-center ${
             leftPanelCollapsed ? 'justify-content-center' : ''
           }`}
+          onClick={() => {
+            leftPanelCollapsed && setLeftPanelCollapsed(!leftPanelCollapsed)
+            // setSearchFocus(true)
+            setTimeout(() => {
+              // searchRef?.current?.click?.();
+            }, 0);
+          }}
         >
-          <Tooltip title="Search">
+          <Tooltip title={`${leftPanelCollapsed ? 'Search' : ''}`}>
             <IconButton>
               <SearchIcon sx={{ mr: 1, my: 0.5 }} />
             </IconButton>
@@ -55,10 +74,11 @@ function App() {
             label="Search"
             variant="filled"
             className={`${leftPanelCollapsed ? 'd-none' : ''}`}
+            // autoFocus={searchFocus}
+            inputRef={searchRef} 
           />
         </Box>
-        {/* {leftPanelCollapsed ? <Tooltip title="Today"> : ''} */}
-        //TODO Make toolip on collapsed
+        <Tooltip title={`${leftPanelCollapsed ? 'Today' : ''}`}>
           <Button
             className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
             variant="outlined"
@@ -66,7 +86,55 @@ function App() {
           >
             {!leftPanelCollapsed ? 'Today' : ''}
           </Button>
-        {/* </Tooltip> */}
+        </Tooltip>
+        <Tooltip title={`${leftPanelCollapsed ? 'Important' : ''}`}>
+          <Button
+            className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
+            variant="outlined"
+            startIcon={<StarBorder />}
+          >
+            {!leftPanelCollapsed ? 'Important' : ''}
+          </Button>
+        </Tooltip>
+        <Tooltip title={`${leftPanelCollapsed ? 'Planned' : ''}`}>
+          <Button
+            className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
+            variant="outlined"
+            startIcon={<DateRange />}
+          >
+            {!leftPanelCollapsed ? 'Planned' : ''}
+          </Button>
+        </Tooltip>
+        <Tooltip title={`${leftPanelCollapsed ? 'Tasks' : ''}`}>
+          <Button
+            className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
+            variant="outlined"
+            startIcon={<TaskAlt />}
+          >
+            {!leftPanelCollapsed ? 'Tasks' : ''}
+          </Button>
+        </Tooltip>
+
+        <Divider />
+
+        <Tooltip title={`${leftPanelCollapsed ? 'Custom Tasks List' : ''}`}>
+          <Button
+            className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
+            variant="outlined"
+            startIcon={<FormatListNumbered />}
+          >
+            {!leftPanelCollapsed ? 'Custom Tasks List' : ''}
+          </Button>
+        </Tooltip>
+        <Tooltip title={`${leftPanelCollapsed ? 'New List' : ''}`}>
+          <Button
+            className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
+            variant="outlined"
+            startIcon={<PlaylistAddCheck />}
+          >
+            {!leftPanelCollapsed ? 'New List' : ''}
+          </Button>
+        </Tooltip>
       </div>
     </div>
   )

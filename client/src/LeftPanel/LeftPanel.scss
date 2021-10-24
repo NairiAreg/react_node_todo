@@ -1,16 +1,13 @@
 @import "../vars.scss";
 
-.collapsed {
-  width: 50px !important;
-  align-items: center;
-}
-
 #leftPanel {
   width: 320px;
   height: 100vh;
   background-color: $mainDark;
   overflow: hidden;
   &.collapsed {
+    width: 50px !important;
+    align-items: center;
     .leftPanelBody > div > *:not(:first-child) {
       display: none !important;
     }
@@ -18,6 +15,12 @@
       justify-content: center;
       > *:first-child {
         padding: 0;
+      }
+    }
+    button {
+      > svg,
+      > span {
+        margin: 0;
       }
     }
   }
@@ -71,9 +74,9 @@
       border-color: $mainText;
       color: $mainText;
       min-width: unset;
-      > span {
-        margin: 0;
-      }
     }
+  }
+  hr {
+    color: $white;
   }
 }
