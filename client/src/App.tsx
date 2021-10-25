@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import './App.scss'
 import LeftPanel from './LeftPanel/LeftPanel'
+import { BrowserRouter as Router, Route , Switch } from 'react-router-dom'
+// TODO remove example routes
+import Home from './Home/Home'
+import Foo from './Foo/Foo'
+import Bar from './Bar/Bar'
 
-function App() {
+function App(): any {
   useEffect(() => {
     // document.addEventListener('DOMContentLoaded', () => {
     // fetch('http://localhost:5000/getAll')
@@ -128,8 +133,9 @@ function App() {
     //   table.innerHTML = tableHtml
     // }
   }, [])
+
   return (
-    <div className="App">
+    <div className="App d-flex">
       {/* <main>
         <label htmlFor="name-input">Name:</label>
         <input
@@ -168,9 +174,15 @@ function App() {
         </section>
       </main> */}
 
-
-
-      <LeftPanel />
+      <Router>
+        <LeftPanel />
+        {/* //TODO remove example routes */}
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/foo" component={Foo} />
+          <Route exact path="/bar" component={Bar} />
+        </Switch>
+      </Router>
     </div>
   )
 }

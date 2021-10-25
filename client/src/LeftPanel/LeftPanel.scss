@@ -46,25 +46,34 @@
       }
     }
     .searchBox {
-      div {
-        width: fill-available;
-        #search {
-          color: $white;
-        }
         div {
-          &::after {
-            border-color: $white;
+          min-height: 50px;
+          label {
+            text-indent: 30px;
           }
-          &::before {
-            border-color: $mainText;
-          }
-        }
-        label {
-          color: $mainText;
-          &.Mui-focused {
+          width: fill-available;
+          #search {
             color: $white;
+            text-indent: 30px;
+            cursor: pointer;
+            &::placeholder {
+              left: 30px;
+            }
           }
-        }
+          div {
+            &::after {
+              border-color: $white;
+            }
+            &::before {
+              border-color: $mainText;
+            }
+          }
+          label {
+            color: $mainText;
+            &.Mui-focused {
+              color: $white;
+            }
+          }
       }
       svg {
         color: $mainText;

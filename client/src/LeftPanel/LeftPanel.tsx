@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+
 import './LeftPanel.scss'
 import {
   Menu as MenuIcon,
@@ -19,14 +21,10 @@ import {
   Divider,
 } from '@mui/material'
 
-function App() {
+function LeftPanel(props: any): any {
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false)
-  // const [searchFocus, setSearchFocus] = useState(false)
-  const searchRef = useRef(null)
-  useEffect(() => {
-    // leftPanelCollapsed && setSearchFocus(false)
-      // searchRef?.current?.focus?.();
-  })
+  useEffect(() => {}, [])
+
   return (
     <div
       id="leftPanel"
@@ -42,7 +40,7 @@ function App() {
       </IconButton>
       <div className="leftPanelBody d-flex flex-column mt-5">
         <div className="profile d-flex">
-          <Tooltip title="Profile">
+          <Tooltip arrow title="Profile">
             <IconButton>
               <img src="https://picsum.photos/45/45" alt="img" />
             </IconButton>
@@ -58,27 +56,18 @@ function App() {
           }`}
           onClick={() => {
             leftPanelCollapsed && setLeftPanelCollapsed(!leftPanelCollapsed)
-            // setSearchFocus(true)
-            setTimeout(() => {
-              // searchRef?.current?.click?.();
-            }, 0);
           }}
         >
-          <Tooltip title={`${leftPanelCollapsed ? 'Search' : ''}`}>
-            <IconButton>
+          <div className="position-relative">
+            <IconButton className="position-absolute ps-2">
               <SearchIcon sx={{ mr: 1, my: 0.5 }} />
             </IconButton>
-          </Tooltip>
-          <TextField
-            id="search"
-            label="Search"
-            variant="filled"
-            className={`${leftPanelCollapsed ? 'd-none' : ''}`}
-            // autoFocus={searchFocus}
-            inputRef={searchRef} 
-          />
+            <Tooltip arrow title={`${leftPanelCollapsed ? 'Search' : ''}`}>
+              <TextField id="search" label="Search" variant="filled" />
+            </Tooltip>
+          </div>
         </Box>
-        <Tooltip title={`${leftPanelCollapsed ? 'Today' : ''}`}>
+        <Tooltip arrow title={`${leftPanelCollapsed ? 'Today' : ''}`}>
           <Button
             className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
             variant="outlined"
@@ -87,7 +76,7 @@ function App() {
             {!leftPanelCollapsed ? 'Today' : ''}
           </Button>
         </Tooltip>
-        <Tooltip title={`${leftPanelCollapsed ? 'Important' : ''}`}>
+        <Tooltip arrow title={`${leftPanelCollapsed ? 'Important' : ''}`}>
           <Button
             className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
             variant="outlined"
@@ -96,7 +85,7 @@ function App() {
             {!leftPanelCollapsed ? 'Important' : ''}
           </Button>
         </Tooltip>
-        <Tooltip title={`${leftPanelCollapsed ? 'Planned' : ''}`}>
+        <Tooltip arrow title={`${leftPanelCollapsed ? 'Planned' : ''}`}>
           <Button
             className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
             variant="outlined"
@@ -105,7 +94,7 @@ function App() {
             {!leftPanelCollapsed ? 'Planned' : ''}
           </Button>
         </Tooltip>
-        <Tooltip title={`${leftPanelCollapsed ? 'Tasks' : ''}`}>
+        <Tooltip arrow title={`${leftPanelCollapsed ? 'Tasks' : ''}`}>
           <Button
             className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
             variant="outlined"
@@ -117,7 +106,7 @@ function App() {
 
         <Divider />
 
-        <Tooltip title={`${leftPanelCollapsed ? 'Custom Tasks List' : ''}`}>
+        <Tooltip arrow title={`${leftPanelCollapsed ? 'Custom Task #1' : ''}`}>
           <Button
             className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
             variant="outlined"
@@ -126,7 +115,7 @@ function App() {
             {!leftPanelCollapsed ? 'Custom Tasks List' : ''}
           </Button>
         </Tooltip>
-        <Tooltip title={`${leftPanelCollapsed ? 'New List' : ''}`}>
+        <Tooltip arrow title={`${leftPanelCollapsed ? 'New List' : ''}`}>
           <Button
             className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
             variant="outlined"
@@ -135,9 +124,13 @@ function App() {
             {!leftPanelCollapsed ? 'New List' : ''}
           </Button>
         </Tooltip>
+        {/* //TODO remove exampel routes */}
+        <Link to="/">Home</Link>
+        <Link to="/foo">Foo</Link>
+        <Link to="/bar">Bar</Link>
       </div>
     </div>
   )
 }
 
-export default App
+export default LeftPanel
