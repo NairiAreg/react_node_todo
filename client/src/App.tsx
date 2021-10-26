@@ -3,7 +3,7 @@ import './App.scss'
 import LeftPanel from './LeftPanel/LeftPanel'
 import { BrowserRouter as Router, Route , Switch } from 'react-router-dom'
 // TODO remove example routes
-import Home from './Home/Home'
+import TaskList from './TaskList/TaskList'
 import Foo from './Foo/Foo'
 import Bar from './Bar/Bar'
 
@@ -178,7 +178,7 @@ function App(): any {
         <LeftPanel />
         {/* //TODO remove example routes */}
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={TaskList} />
           <Route exact path="/foo" component={Foo} />
           <Route exact path="/bar" component={Bar} />
         </Switch>

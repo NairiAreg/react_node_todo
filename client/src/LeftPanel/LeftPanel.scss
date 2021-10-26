@@ -1,12 +1,13 @@
 @import "../vars.scss";
 
 #leftPanel {
-  width: 320px;
+  max-width: 320px;
+  flex: 1;
   height: 100vh;
-  background-color: $mainDark;
+  background-color: $mainLight;
   overflow: hidden;
   &.collapsed {
-    width: 50px !important;
+    max-width: 50px !important;
     align-items: center;
     .leftPanelBody > div > *:not(:first-child) {
       display: none !important;

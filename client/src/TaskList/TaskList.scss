@@ -1,0 +1,13 @@
+@import "../vars.scss";
+
+#taskList {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: $mainDark;
+  .myDayTitle {
+    * {
+      color: $white;
+    }
+  }
+}
