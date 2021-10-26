@@ -89,6 +89,7 @@ function LeftPanel(props: any) {
           <Menu
             anchorEl={anchorEl}
             open={!!open}
+            className="popupMenu"
             onClose={handleClose}
             onClick={handleClose}
             PaperProps={{
@@ -122,9 +123,6 @@ function LeftPanel(props: any) {
           >
             <MenuItem>
               <Avatar /> Profile
-            </MenuItem>
-            <MenuItem>
-              <Avatar /> My account
             </MenuItem>
             <Divider />
             <MenuItem>

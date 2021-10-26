@@ -47,34 +47,34 @@
       }
     }
     .searchBox {
+      div {
+        min-height: 50px;
+        label {
+          text-indent: 30px;
+        }
+        width: fill-available;
+        #search {
+          color: $white;
+          text-indent: 30px;
+          cursor: pointer;
+          &::placeholder {
+            left: 30px;
+          }
+        }
         div {
-          min-height: 50px;
-          label {
-            text-indent: 30px;
+          &::after {
+            border-color: $white;
           }
-          width: fill-available;
-          #search {
+          &::before {
+            border-color: $mainText;
+          }
+        }
+        label {
+          color: $mainText;
+          &.Mui-focused {
             color: $white;
-            text-indent: 30px;
-            cursor: pointer;
-            &::placeholder {
-              left: 30px;
-            }
           }
-          div {
-            &::after {
-              border-color: $white;
-            }
-            &::before {
-              border-color: $mainText;
-            }
-          }
-          label {
-            color: $mainText;
-            &.Mui-focused {
-              color: $white;
-            }
-          }
+        }
       }
       svg {
         color: $mainText;
@@ -88,5 +88,22 @@
   }
   hr {
     color: $white;
+  }
+}
+
+.popupMenu {
+  div {
+    &::before {
+      background-color: $mainDark;
+    }
+    ul {
+      background-color: $mainDark;
+      li {
+        color: $mainText;
+        svg {
+          color: $mainText;
+        }
+      }
+    }
   }
 }

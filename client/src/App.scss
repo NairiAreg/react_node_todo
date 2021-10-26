@@ -33,3 +33,18 @@ button {
     }
   }
 }
+
+.popupMenu {
+  ul {
+    li {
+      ul {
+        display: none;
+      }
+      &:hover {
+        >ul {
+          display: unset;
+        }
+      }
+    }
+  }
+}
