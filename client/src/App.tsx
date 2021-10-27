@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import './App.scss'
 import LeftPanel from './LeftPanel/LeftPanel'
+import RightPanel from './RightPanel/RightPanel'
 import { BrowserRouter as Router, Route , Switch } from 'react-router-dom'
 // TODO remove example routes
 import TaskList from './TaskList/TaskList'
@@ -133,9 +134,13 @@ function App(): any {
     //   table.innerHTML = tableHtml
     // }
   }, [])
-
+  const [count, setCount] = useState(0);
+  const callback = useCallback((count) => {
+    setCount(count);
+  }, []);
   return (
     <div className="App d-flex">
+      <h2>count {count}</h2>
       {/* <main>
         <label htmlFor="name-input">Name:</label>
         <input
@@ -182,6 +187,7 @@ function App(): any {
           <Route exact path="/foo" component={Foo} />
           <Route exact path="/bar" component={Bar} />
         </Switch>
+        <RightPanel parentCallback={callback} />
       </Router>
     </div>
   )

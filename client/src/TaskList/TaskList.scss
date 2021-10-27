@@ -15,6 +15,7 @@
     flex: 1;
     .task {
       .exactTask {
+        cursor: pointer;
         color: #919191;
         border: solid 1px;
         flex: 1;
@@ -25,6 +26,19 @@
             font-size: 13px;
           }
         }
+      }
+    }
+    >:last-child {
+      margin-top: 15px;
+      background-color: unset;
+      color: $mainText;
+      #panel1a-header {
+        svg {
+          color: $mainText;
+        }
+      }
+      h6 {
+        text-decoration: line-through;
       }
     }
   }

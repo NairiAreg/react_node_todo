@@ -14,6 +14,7 @@ import {
   Palette,
   Assignment,
   Air,
+  ExpandMore,
   RadioButtonUnchecked,
   CheckCircle,
   ControlPoint,
@@ -22,6 +23,7 @@ import {
   IconButton,
   Tooltip,
   Divider,
+  Typography,
   Avatar,
   TextField,
   Box,
@@ -31,6 +33,9 @@ import {
   List,
   ListItem,
   ListItemText,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   ListItemButton,
   ListItemIcon,
   Paper,
@@ -193,19 +198,52 @@ function Home() {
         </div>
       </div>
 
-      <div id="tasks" className='p-5'>
+      <div id="tasks" className="p-5">
         <div className="task d-flex">
           <IconButton>
             <RadioButtonUnchecked />
           </IconButton>
-          <div className="exactTask p-3"> 
-            <h6>Task #1</h6>
-            <span>
-            <Assignment />
-            </span>
-            <span>Today</span>
+          <div className="exactTask p-3 d-flex justify-content-between">
+            <div>
+              <h6>Task #1</h6>
+              <span>
+                <Assignment />
+              </span>
+              <span>Today</span>
+            </div>
+            <IconButton>
+              <StarBorder />
+            </IconButton>
           </div>
         </div>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Completed Tasks</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className="task d-flex">
+              <IconButton>
+                <CheckCircle />
+              </IconButton>
+              <div className="exactTask p-3 d-flex justify-content-between">
+                <div>
+                  <h6>Task #1</h6>
+                  <span>
+                    <Assignment />
+                  </span>
+                  <span>Today</span>
+                </div>
+                <IconButton>
+                  <StarBorder />
+                </IconButton>
+              </div>
+            </div>
+          </AccordionDetails>
+        </Accordion>
       </div>
 
       <Box className="addTaskBox d-flex align-items-center">
