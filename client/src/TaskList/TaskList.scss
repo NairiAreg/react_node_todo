@@ -3,11 +3,74 @@
 #taskList {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   flex: 1;
   background-color: $mainDark;
   .myDayTitle {
     * {
       color: $white;
+    }
+  }
+  #tasks {
+    flex: 1;
+    .task {
+      .exactTask {
+        color: #919191;
+        border: solid 1px;
+        flex: 1;
+        span {
+          font-size: 13px;
+          margin: 3px;
+          svg {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+  .addTaskBox {
+    div {
+      min-height: 50px;
+      label {
+        text-indent: 30px;
+      }
+      width: fill-available;
+      #addTaskInput {
+        color: $white;
+        text-indent: 30px;
+        cursor: pointer;
+        &::placeholder {
+          left: 30px;
+        }
+      }
+      div {
+        &::after {
+          border-color: $white;
+        }
+        &::before {
+          border-color: $mainText;
+        }
+      }
+      label {
+        color: $mainText;
+        &.Mui-focused {
+          color: $white;
+        }
+      }
+    }
+    svg {
+      color: $mainText;
+    }
+  }
+}
+
+.themePopup {
+  li {
+    width: 100px;
+    height: 25px;
+    border: $mainDark solid;
+    &:hover {
+      border-color: $mainText;
     }
   }
 }

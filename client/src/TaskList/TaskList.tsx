@@ -11,12 +11,21 @@ import {
   Today,
   SortByAlpha,
   EventNote,
+  Palette,
+  Assignment,
+  Air,
+  RadioButtonUnchecked,
+  CheckCircle,
+  ControlPoint,
 } from '@mui/icons-material'
 import {
   IconButton,
   Tooltip,
   Divider,
   Avatar,
+  TextField,
+  Box,
+  Button,
   Menu,
   MenuItem,
   List,
@@ -29,7 +38,7 @@ import {
 function Home() {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = anchorEl
-  const handleClick = (event: any) => {
+  const handleClickListOptions = (event: any) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
@@ -44,7 +53,7 @@ function Home() {
         </div>
         <div>
           <Tooltip arrow title="List Options">
-            <IconButton onClick={handleClick}>
+            <IconButton onClick={handleClickListOptions}>
               <MoreVert />
             </IconButton>
           </Tooltip>
@@ -96,30 +105,78 @@ function Home() {
               <List className="sortOptionsPopup position-absolute end-100">
                 <ListItem disablePadding>
                   <ListItemButton>
-                    <ListItemIcon><StarBorder /></ListItemIcon>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
                     <ListItemText primary="Importance" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                   <ListItemButton>
-                    <ListItemIcon><Today /></ListItemIcon>
+                    <ListItemIcon>
+                      <Today />
+                    </ListItemIcon>
                     <ListItemText primary="Due Date" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                   <ListItemButton>
-                    <ListItemIcon><SortByAlpha /></ListItemIcon>
+                    <ListItemIcon>
+                      <SortByAlpha />
+                    </ListItemIcon>
                     <ListItemText primary="Alphabetically" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                   <ListItemButton>
-                    <ListItemIcon><EventNote /></ListItemIcon>
+                    <ListItemIcon>
+                      <EventNote />
+                    </ListItemIcon>
                     <ListItemText primary="Creation date" />
                   </ListItemButton>
                 </ListItem>
               </List>
             </MenuItem>
+
+            <MenuItem>
+              <ListItemIcon>
+                <Palette fontSize="small" />
+              </ListItemIcon>
+              Change Theme
+              <List className="sortOptionsPopup themePopup position-absolute end-100">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    style={{ backgroundColor: '#61BD4F' }}
+                  ></ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    style={{ backgroundColor: '#F2D600' }}
+                  ></ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    style={{ backgroundColor: '#FF9F1A' }}
+                  ></ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    style={{ backgroundColor: '#EB5A46' }}
+                  ></ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    style={{ backgroundColor: '#C377E0' }}
+                  ></ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    style={{ backgroundColor: '#0079BF' }}
+                  ></ListItemButton>
+                </ListItem>
+              </List>
+            </MenuItem>
+
             <MenuItem>
               <ListItemIcon>
                 <Settings fontSize="small" />
@@ -135,6 +192,28 @@ function Home() {
           </Menu>
         </div>
       </div>
+
+      <div id="tasks" className='p-5'>
+        <div className="task d-flex">
+          <IconButton>
+            <RadioButtonUnchecked />
+          </IconButton>
+          <div className="exactTask p-3"> 
+            <h6>Task #1</h6>
+            <span>
+            <Assignment />
+            </span>
+            <span>Today</span>
+          </div>
+        </div>
+      </div>
+
+      <Box className="addTaskBox d-flex align-items-center">
+        <IconButton>
+          <ControlPoint sx={{ mr: 1, my: 0.5 }} />
+        </IconButton>
+        <TextField id="addTaskInput" label="Add a new task" variant="filled" />
+      </Box>
     </div>
   )
 }
