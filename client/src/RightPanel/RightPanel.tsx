@@ -27,26 +27,30 @@ import {
   MenuItem,
   ListItemIcon,
 } from '@mui/material'
-function RightPanel(parentCallback:any) {
-  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
-  const [count, setCount] = useState(0);
+function RightPanel({rightPanelCollapsed, setRightPanelCollapsed}:any) {
+  // const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
+  // const [count, setCount] = useState(0);
+  useEffect(() => {
+    // console.log(parentCallback,"😁")
+    // // props.parentCallback(1)
+    // parentCallback(count + 1)
+  }, [])
   return (
     <div
       id="rightPanel"
       className={`${rightPanelCollapsed ? 'collapsed' : ''} position-relative`}
     >
-      <IconButton
+      {/* <IconButton
         className="menuToggleIcon position-absolute"
         onClick={() => {
           setRightPanelCollapsed(!rightPanelCollapsed)
         }}
       >
         <MenuIcon fontSize="large" />
-      </IconButton>
+      </IconButton> */}
 
       <button onClick={() => {
-        setCount((count) => count + 1);
-        parentCallback(count + 1);
+        setRightPanelCollapsed(!rightPanelCollapsed);
       }}>CLICK</button>
     </div>
   )

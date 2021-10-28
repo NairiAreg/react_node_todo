@@ -7,7 +7,7 @@
   background-color: $mainLight;
   overflow: hidden;
   &.collapsed {
-    max-width: 50px !important;
+    max-width: 0px !important;
     align-items: center;
     .rightPanelBody > div > *:not(:first-child) {
       display: none !important;

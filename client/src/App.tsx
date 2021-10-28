@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react'
 import './App.scss'
 import LeftPanel from './LeftPanel/LeftPanel'
 import RightPanel from './RightPanel/RightPanel'
-import { BrowserRouter as Router, Route , Switch } from 'react-router-dom'
+// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 // TODO remove example routes
 import TaskList from './TaskList/TaskList'
-import Foo from './Foo/Foo'
-import Bar from './Bar/Bar'
+// import Foo from './Foo/Foo'
+// import Bar from './Bar/Bar'
 
 function App(): any {
   useEffect(() => {
@@ -134,13 +134,23 @@ function App(): any {
     //   table.innerHTML = tableHtml
     // }
   }, [])
-  const [count, setCount] = useState(0);
-  const callback = useCallback((count) => {
-    setCount(count);
-  }, []);
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
+  const [info, setInfo] = useState("")
+
   return (
     <div className="App d-flex">
-      <h2>count {count}</h2>
+      <h2>{String(rightPanelCollapsed)}, {info}</h2>
+      <LeftPanel />
+      <TaskList setRightPanelCollapsed={setRightPanelCollapsed} setInfo={setInfo} />
+      <RightPanel setRightPanelCollapsed={setRightPanelCollapsed} rightPanelCollapsed={rightPanelCollapsed} info={info} />
+      {/* <Router> */}
+      {/* //TODO remove example routes */}
+      {/* </Router> */}
+      {/* <Switch>
+          <Route exact path="/" component={TaskList} />
+          <Route exact path="/foo" component={Foo} />
+          <Route exact path="/bar" component={Bar} />
+        </Switch> */}
       {/* <main>
         <label htmlFor="name-input">Name:</label>
         <input
@@ -178,17 +188,6 @@ function App(): any {
           <button id="update-row-btn">Update</button>
         </section>
       </main> */}
-
-      <Router>
-        <LeftPanel />
-        {/* //TODO remove example routes */}
-        <Switch>
-          <Route exact path="/" component={TaskList} />
-          <Route exact path="/foo" component={Foo} />
-          <Route exact path="/bar" component={Bar} />
-        </Switch>
-        <RightPanel parentCallback={callback} />
-      </Router>
     </div>
   )
 }

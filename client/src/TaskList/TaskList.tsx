@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './TaskList.scss'
 import {
-  PersonAdd,
   Settings,
   Logout,
   MoreVert,
@@ -22,12 +21,9 @@ import {
 import {
   IconButton,
   Tooltip,
-  Divider,
   Typography,
-  Avatar,
   TextField,
   Box,
-  Button,
   Menu,
   MenuItem,
   List,
@@ -38,9 +34,8 @@ import {
   AccordionDetails,
   ListItemButton,
   ListItemIcon,
-  Paper,
 } from '@mui/material'
-function Home() {
+function TaskList({ setInfo, setRightPanelCollapsed }: any) {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = anchorEl
   const handleClickListOptions = (event: any) => {
@@ -49,6 +44,7 @@ function Home() {
   const handleClose = () => {
     setAnchorEl(null)
   }
+  useEffect(() => {}, [])
   return (
     <div id="taskList">
       <div className="d-flex justify-content-between p-3">
@@ -199,7 +195,14 @@ function Home() {
       </div>
 
       <div id="tasks" className="p-5">
-        <div className="task d-flex">
+        <div
+          className="task d-flex"
+          onClick={(e) => {
+            console.log((e.target as any).querySelector('h6').innerText, '❤')
+            setInfo((e.target as any).querySelector('h6').innerText)
+            setRightPanelCollapsed(false)
+          }}
+        >
           <IconButton>
             <RadioButtonUnchecked />
           </IconButton>
@@ -256,4 +259,4 @@ function Home() {
   )
 }
 
-export default Home
+export default TaskList
