@@ -7,12 +7,17 @@ import {
   Search as SearchIcon,
   Today,
   StarBorder,
-  DateRange,
+  DeleteForever,
   TaskAlt,
+  Repeat,
   FormatListNumbered,
   PlaylistAddCheck,
   PersonAdd,
+  DateRange,
+  ArrowForwardIos,
   Settings,
+  RadioButtonUnchecked,
+  Assignment,
   Logout,
 } from '@mui/icons-material'
 import {
@@ -27,7 +32,7 @@ import {
   MenuItem,
   ListItemIcon,
 } from '@mui/material'
-function RightPanel({rightPanelCollapsed, setRightPanelCollapsed}:any) {
+function RightPanel({ rightPanelCollapsed, setRightPanelCollapsed }: any) {
   // const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
   // const [count, setCount] = useState(0);
   useEffect(() => {
@@ -38,20 +43,59 @@ function RightPanel({rightPanelCollapsed, setRightPanelCollapsed}:any) {
   return (
     <div
       id="rightPanel"
-      className={`${rightPanelCollapsed ? 'collapsed' : ''} position-relative`}
+      className={`${
+        rightPanelCollapsed ? 'collapsed' : ''
+      } position-relative d-flex flex-column`}
     >
-      {/* <IconButton
-        className="menuToggleIcon position-absolute"
-        onClick={() => {
-          setRightPanelCollapsed(!rightPanelCollapsed)
-        }}
-      >
-        <MenuIcon fontSize="large" />
-      </IconButton> */}
+      <div className="task d-flex">
+        <IconButton>
+          <RadioButtonUnchecked />
+        </IconButton>
+        <div className="exactTask p-3 d-flex justify-content-between align-items-center w-100">
+          <div>
+            <h3>Task #1</h3>
+          </div>
+          <IconButton>
+            <StarBorder />
+          </IconButton>
+        </div>
+      </div>
 
-      <button onClick={() => {
-        setRightPanelCollapsed(!rightPanelCollapsed);
-      }}>CLICK</button>
+      <Divider />
+
+      <Button className={`mx-1`} variant="outlined" startIcon={<Today />}>
+        Add to Today
+      </Button>
+
+      <Button className={`mx-1`} variant="outlined" startIcon={<DateRange />}>
+        Add due date
+      </Button>
+
+      <Button className={`mx-1`} variant="outlined" startIcon={<Repeat />}>
+        Repeat
+      </Button>
+
+      <div id="notesParent" className="p-3">
+        <TextField id="notes" label="Notes" multiline maxRows={6} />
+      </div>
+
+      <div className="d-flex align-items-end justify-content-around px-3 bottomButtons">
+        <Tooltip arrow title={`Dismiss detail view`}>
+          <IconButton
+            onClick={() => {
+              setRightPanelCollapsed(!rightPanelCollapsed)
+            }}
+          >
+            <ArrowForwardIos />
+          </IconButton>
+        </Tooltip>
+        <p className="mb-2">Created on Sun. Oct 24</p>
+        <Tooltip arrow title={`Delete this task`}>
+          <IconButton>
+            <DeleteForever />
+          </IconButton>
+        </Tooltip>
+      </div>
     </div>
   )
 }

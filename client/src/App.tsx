@@ -139,7 +139,6 @@ function App(): any {
 
   return (
     <div className="App d-flex">
-      <h2>{String(rightPanelCollapsed)}, {info}</h2>
       <LeftPanel />
       <TaskList setRightPanelCollapsed={setRightPanelCollapsed} setInfo={setInfo} />
       <RightPanel setRightPanelCollapsed={setRightPanelCollapsed} rightPanelCollapsed={rightPanelCollapsed} info={info} />
