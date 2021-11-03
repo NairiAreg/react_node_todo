@@ -107,3 +107,99 @@
     }
   }
 }
+
+#authModal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #242426;
+  padding: 20px;
+  min-width: 320px;
+  * {
+    color: $white;
+  }
+  .authContainer {
+    width: 100%;
+    overflow: hidden;
+    > input {
+      display: none;
+      @for $i from 1 through 2 {
+        &#tab#{$i}:checked {
+          ~ .line {
+            left: #{($i - 1) * 50%};
+          }
+          ~ .content-container #c#{$i} {
+            opacity: 1;
+            position: relative;
+            z-index: 3;
+          }
+        }
+      }
+    }
+    > label {
+      transition: 0.25s background ease;
+      cursor: pointer;
+      padding: 0 10px;
+      position: relative;
+      width: 50%;
+      text-align: center;
+      &::after {
+        content: "";
+        height: 2px;
+        width: 100%;
+        position: absolute;
+        display: block;
+        background: black;
+        bottom: -12px;
+        opacity: 0;
+        left: 0;
+        transition: 0.25s ease;
+      }
+      &:hover::after {
+        opacity: 1;
+      }
+    }
+    .line {
+      position: relative;
+      height: 2px;
+      background: $white;
+      width: 50%;
+      top: 10px;
+      left: 0;
+      transition: 0.25s ease;
+    }
+    .content-container {
+      position: relative;
+      font-size: 16px;
+      .content {
+        position: absolute;
+        padding: 10px;
+        width: 100%;
+        top: 0;
+        opacity: 0;
+        margin: 20px 0 0;
+        transition: 0.25s ease;
+        color: #333;
+        > div {
+          width: 100%;
+          margin: 0 0 20px;
+          *:after {
+            border-color: $white !important;
+          }
+        }
+        h3 {
+          font-weight: 200;
+          margin: 10px 0;
+        }
+        p {
+          margin: 10px 0;
+        }
+      }
+    }
+  }
+}
+
+.authButton {
+  border: solid !important;
+}

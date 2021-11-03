@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.scss'
 import LeftPanel from './LeftPanel/LeftPanel'
 import RightPanel from './RightPanel/RightPanel'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 // TODO remove example routes
 import TaskList from './TaskList/TaskList'
@@ -9,184 +11,217 @@ import TaskList from './TaskList/TaskList'
 // import Bar from './Bar/Bar'
 
 function App(): any {
+  const [popupMessage, setPopupMessage] = useState('')
+  const [user, setUser] = useState<any>(null)
+  const [taskListConfig, setTaskListConfig] = useState<object>({title:"All Tasks",allowRename:false})
+  const [tasks, setTasks] = useState<any>(null)
+  const [selectedTask, setSelectedTask] = useState<object>(null)
+  const [filteredTasks, setFilteredTasks] = useState<any>(null)
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(true)
+  const [info, setInfo] = useState('')
+  const [username, setUsername] = useState('')
+  const [loginEmail, setLoginEmail] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
+  const [newTask, setNewTask] = useState('')
+
   useEffect(() => {
-    // document.addEventListener('DOMContentLoaded', () => {
-    // fetch('http://localhost:5000/getAll')
-    // .then((res) => res.json())
-    // .then((data) => loadHtmlTable(data['data']))
-    // })
-    // type HtmlSomething = any | null
-    // console.log(document.querySelector('table tbody'))
-    // const tbody:HtmlSomething = document.querySelector('table tbody')
-    // const updateBtn:HtmlSomething = document.querySelector('#update-row-btn')
-    // const searchBtn:HtmlSomething = document.querySelector('#search-btn')
-    // const searchInput:HtmlSomething = document.querySelector('#search-input')
-    // const updateRow:HtmlSomething = document.querySelector('#update-row')
-    // const updateRowBtn:HtmlSomething = document.querySelector('#update-row-btn')
-    // const addBtn:HtmlSomething = document.querySelector('#add-name-btn')
-    // if (tbody) {
-    //   tbody.addEventListener('click', (e: any) => {
-    //     if (e.target.className === 'delete-row-btn') {
-    //       deleteRowById(e.target.dataset.id)
-    //     }
-    //     if (e.target.className === 'edit-row-btn') {
-    //       handleEditRow(e.target.dataset.id)
-    //     }
-    //   })
-    // }
-    // const deleteRowById = (id: any) => {
-    //   fetch('http://localhost:5000/delete/' + id, {
-    //     method: 'DELETE',
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       if (data.success) {
-    //         // location.reload()
-    //         alert('good')
-    //       }
-    //     })
-    // }
-    // searchBtn.addEventListener('click', () => {
-    //   const searchValue:any | null = searchInput.value
-    //   fetch('http://localhost:5000/search/' + searchValue)
-    //     .then((res) => res.json())
-    //     .then((data) => loadHtmlTable(data['data']))
-    // })
-    // const handleEditRow = (id:any) => {
-    //   updateRow.hidden = false
-    //   updateRowBtn.dataset.id = id
-    // }
-    // updateBtn.addEventListener('click', (e:any) => {
-    //   const updateNameInput:HtmlSomething = document.querySelector('#update-name-input')
-    //   fetch('http://localhost:5000/update', {
-    //     method: 'PATCH',
-    //     headers: { 'Content-type': 'application/json' },
-    //     body: JSON.stringify({
-    //       id: e.target.dataset.id,
-    //       name: updateNameInput.value,
-    //     }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       if (data.success) {
-    //         // location.reload()
-    //         alert("Good")
-    //       }
-    //     })
-    // })
-    // addBtn.addEventListener('click', () => {
-    //   const nameInput:HtmlSomething = document.querySelector('#name-input')
-    //   const name = nameInput.value
-    //   nameInput.value = ''
-    //   fetch('http://localhost:5000/insert', {
-    //     headers: {
-    //       'Content-type': 'application/json',
-    //     },
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //       name,
-    //     }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => insertRowIntoTable(data['data']))
-    // })
-    // const insertRowIntoTable = (data:any) => {
-    //   console.log(data, 123)
-    //   const table:HtmlSomething = document.querySelector('table tbody')
-    //   const isTableData = table.querySelector('.no-data')
-    //   let tableHtml = `<tr>`
-    //   for (const key in data) {
-    //     if (Object.hasOwnProperty.call(data, key)) {
-    //       if (key === 'dateAdded') {
-    //         data[key] = new Date(data[key].toLocaleString())
-    //       }
-    //       tableHtml += `<td>${data[key]}</td>`
-    //     }
-    //   }
-    //   tableHtml += `<td><button class="delete-row-btn" data-id="${data.id}">Delete</button></td>`
-    //   tableHtml += `<td><button class="edit-row-btn" data-id="${data.id}">Edit</button></td>`
-    //   tableHtml += `</tr>`
-    //   if (isTableData) {
-    //     table.innerHTML = tableHtml
-    //   } else {
-    //     const newRow = table.insertRow()
-    //     newRow.innerHTML = tableHtml
-    //   }
-    // }
-    // function loadHtmlTable(data:any) {
-    //   const table:HtmlSomething = document.querySelector('table tbody')
-    //   console.log(data)
-    //   if (data.length == 0) {
-    //     table.innerHTML =
-    //       "<tr><td class='no-data' colspan='5'>No Data</td></td></tr>"
-    //     return
-    //   }
-    //   let tableHtml = ''
-    //   data.forEach(({ id, name, date_added }:any) => {
-    //     tableHtml += '<tr>'
-    //     tableHtml += `<td>${id}</td>`
-    //     tableHtml += `<td>${name}</td>`
-    //     tableHtml += `<td>${new Date(date_added).toLocaleString()}</td>`
-    //     tableHtml += `<td><button class="delete-row-btn" data-id="${id}">Delete</button></td>`
-    //     tableHtml += `<td><button class="edit-row-btn" data-id="${id}">Edit</button></td>`
-    //     tableHtml += `</tr>`
-    //   })
-    //   table.innerHTML = tableHtml
-    // }
-  }, [])
-  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
-  const [info, setInfo] = useState("")
+    if (!newTask) return
+    let jwt = localStorage.getItem('jwt') ? localStorage.getItem('jwt') : ''
+    fetch('http://localhost:3000/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'auth-token': jwt },
+      body: JSON.stringify({
+        user_id: user._id,
+        title: newTask,
+      }),
+    }).then((response) => {
+      response.json().then((data) => {
+        if (!response.ok) {
+          setPopupMessage(JSON.stringify([false, data]))
+        } else {
+          setPopupMessage(JSON.stringify([true, 'Task Added']))
+          setTasks((tasks) => [...tasks, data])
+        }
+      })
+    })
+  }, [newTask])
+  const updateTask = (taskId:string,query:object,message:string) => {
+    console.log("💹🈯💹",taskId,query)
+    let jwt = localStorage.getItem('jwt') ? localStorage.getItem('jwt') : ''
+    fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'auth-token': jwt },
+      body: JSON.stringify(query),
+    }).then((response) => {
+      response.text().then((data) => {
+        if (!response.ok) {
+          setPopupMessage(JSON.stringify([false, data]))
+        } else {
+          setPopupMessage(JSON.stringify([true, message]))
+          setTasks(filteredTasks.map(e=>e._id == taskId ? {...e,...query} : e))
+          selectedTask && setSelectedTask({...selectedTask, ...query})
+        }
+      })
+    })
+  }
+  const deleteTask = (taskId:string,message:string) => {
+    let jwt = localStorage.getItem('jwt') ? localStorage.getItem('jwt') : ''
+    fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'auth-token': jwt },
+    }).then((response) => {
+      response.text().then((data) => {
+        if (!response.ok) {
+          setPopupMessage(JSON.stringify([false, data]))
+        } else {
+          setPopupMessage(JSON.stringify([true, message]))
+          setTasks(filteredTasks.map(e=>e._id != taskId))
+          selectedTask && setSelectedTask(null)
+        }
+      })
+    })
+  }
+  useEffect(() => {
+    if (!popupMessage.length) return
+    // console.log('🤞🤞🤞 popupMessage changed: ', popupMessage)
+
+    let data = JSON.parse(popupMessage)
+    data[0] ? toast.success(data[1]) : toast.error(data[1])
+  }, [popupMessage])
+  useEffect(() => {
+    // console.log(user,localStorage.getItem("jwt"),"✔✔✔")
+
+    let jwt = localStorage.getItem('jwt') ? localStorage.getItem('jwt') : ''
+    console.log(`✨✨✨\nJWT: ${jwt} \nUser:`)
+    console.log(user)
+    console.log('%c Tasks:', 'color:red')
+    console.log(tasks)
+    console.log('\n✨✨✨')
+    if (!user && jwt) {
+      fetch('http://localhost:3000/api/user/get_data', {
+        method: 'GET',
+        headers: { 'auth-token': jwt },
+      }).then((response) => {
+        // console.log(response,"✔✔✔")
+        response.text().then((data) => {
+          if (!response.ok) {
+            console.error(JSON.stringify(data))
+          } else {
+            console.log(JSON.stringify('Got all Data 🐱‍🏍🐱‍🏍🐱‍🏍'))
+            // console.log("😁😁",JSON.parse(data))
+            setUser(JSON.parse(data))
+          }
+        })
+      })
+      fetch('http://localhost:3000/api/tasks', {
+        method: 'GET',
+        headers: { 'auth-token': jwt, 'Content-Type': 'application/json' },
+      }).then((response) => {
+        // console.log(response,"✔✔✔")
+        response.text().then((data) => {
+          if (!response.ok) {
+            console.error(JSON.stringify(data))
+          } else {
+            console.log(JSON.stringify('Got all Data 🐱‍🏍🐱‍🏍🐱‍🏍'))
+            // console.log("😁😁",JSON.parse(data))
+            setTasks(JSON.parse(data))
+          }
+        })
+      })
+    }
+    if (tasks) {
+      console.log('😘😘😘', tasks)
+      setFilteredTasks(tasks)
+    }
+  }, [user, tasks])
+  const login = () => {
+    fetch('http://localhost:3000/api/user/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: loginEmail,
+        password: loginPassword,
+      }),
+    }).then((response) => {
+      response.text().then((data) => {
+        if (!response.ok) {
+          setPopupMessage(JSON.stringify([false, data]))
+        } else {
+          setPopupMessage(JSON.stringify([true, 'Logged in']))
+          setUser('')
+          localStorage.setItem('jwt', data)
+        }
+      })
+    })
+  }
+  const register = () => {
+    fetch('http://localhost:3000/api/user/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: username,
+        email: loginEmail,
+        password: loginPassword,
+      }),
+    }).then((response) => {
+      response.text().then((data) => {
+        if (!response.ok) {
+          setPopupMessage(JSON.stringify([false, data]))
+        } else {
+          setPopupMessage(JSON.stringify([true, 'Registered please sign in']))
+        }
+      })
+    })
+    // .then((response) => response.text())
+    // .then((data) => console.log('✌✌', data, '✌✌'))
+  }
 
   return (
     <div className="App d-flex">
-      <LeftPanel />
-      <TaskList setRightPanelCollapsed={setRightPanelCollapsed} setInfo={setInfo} />
-      <RightPanel setRightPanelCollapsed={setRightPanelCollapsed} rightPanelCollapsed={rightPanelCollapsed} info={info} />
-      {/* <Router> */}
-      {/* //TODO remove example routes */}
-      {/* </Router> */}
-      {/* <Switch>
-          <Route exact path="/" component={TaskList} />
-          <Route exact path="/foo" component={Foo} />
-          <Route exact path="/bar" component={Bar} />
-        </Switch> */}
-      {/* <main>
-        <label htmlFor="name-input">Name:</label>
-        <input
-          type="text"
-          name="name-input"
-          id="name-input"
-          placeholder="Name"
-        />
-        <button id="add-name-btn">Add Name</button>
-
-        <br />
-        <br />
-        <br />
-        <div>
-          <input type="text" placeholder="Search by name" id="search-input" />
-          <button id="search-btn">Search</button>
-        </div>
-
-        <table id="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Date Added</th>
-              <th>Delete</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-
-        <section hidden id="update-row">
-          <label htmlFor="update-name-input">Update Name:</label>
-          <input type="text" id="update-name-input" />
-          <button id="update-row-btn">Update</button>
-        </section>
-      </main> */}
+      <LeftPanel
+        user={user}
+        filteredTasks={filteredTasks}
+        setFilteredTasks={setFilteredTasks}
+        tasks={tasks}
+        setUser={setUser}
+        setTaskListConfig={setTaskListConfig}
+        login={login}
+        register={register}
+        username={username}
+        setUsername={setUsername}
+        loginEmail={loginEmail}
+        setLoginEmail={setLoginEmail}
+        loginPassword={loginPassword}
+        setLoginPassword={setLoginPassword}
+      />
+      <TaskList
+        setRightPanelCollapsed={setRightPanelCollapsed}
+        setInfo={setInfo}
+        updateTask={updateTask}
+        setNewTask={setNewTask}
+        setSelectedTask={setSelectedTask}
+        taskListConfig={taskListConfig}
+        tasks={filteredTasks}
+      />
+      <RightPanel
+        setRightPanelCollapsed={setRightPanelCollapsed}
+        rightPanelCollapsed={rightPanelCollapsed}
+        setSelectedTask={setSelectedTask}
+        selectedTask={selectedTask}
+        info={info}
+        updateTask={updateTask}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import {
   DriveFileRenameOutline,
   Sort,
   StarBorder,
+  Star,
   Today,
   SortByAlpha,
   EventNote,
@@ -35,8 +36,17 @@ import {
   ListItemButton,
   ListItemIcon,
 } from '@mui/material'
-function TaskList({ setInfo, setRightPanelCollapsed }: any) {
+function TaskList({
+  setInfo,
+  setRightPanelCollapsed,
+  setNewTask,
+  setSelectedTask,
+  taskListConfig,
+  tasks,
+  updateTask,
+}: any) {
   const [anchorEl, setAnchorEl] = useState(null)
+  const [inputText, setInputText] = useState('')
   const open = anchorEl
   const handleClickListOptions = (event: any) => {
     setAnchorEl(event.currentTarget)
@@ -44,12 +54,26 @@ function TaskList({ setInfo, setRightPanelCollapsed }: any) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  useEffect(() => {}, [])
+  useEffect(() => {
+    console.log('🅰🅰🅰', tasks, 123123)
+  }, [tasks])
+  const formatDueDate = (date) => {
+    if (new Date(date).toDateString() == new Date().toDateString())
+      return 'Today'
+    if (
+      new Date(new Date().setDate(new Date().getDate() + 1)).toDateString() ==
+      new Date(date).toDateString()
+    )
+      return 'Tomorrow'
+
+    return new Date(date).toDateString()
+  }
+
   return (
     <div id="taskList">
       <div className="d-flex justify-content-between p-3">
         <div className="d-flex flex-column myDayTitle">
-          <h1>My Day</h1>
+          <h1>{taskListConfig.title}</h1>
           <h6>{new Date().toDateString()}</h6>
         </div>
         <div>
@@ -94,10 +118,11 @@ function TaskList({ setInfo, setRightPanelCollapsed }: any) {
             transformOrigin={{ horizontal: 'left', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           >
-            <MenuItem>
-              {/* //TODO Remove later */}
-              <DriveFileRenameOutline /> Rename List
-            </MenuItem>
+            {taskListConfig.allowRename && (
+              <MenuItem>
+                <DriveFileRenameOutline /> Rename List
+              </MenuItem>
+            )}
             <MenuItem>
               <ListItemIcon>
                 <Sort fontSize="small" />
@@ -177,83 +202,141 @@ function TaskList({ setInfo, setRightPanelCollapsed }: any) {
                 </ListItem>
               </List>
             </MenuItem>
-
-            <MenuItem>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
           </Menu>
         </div>
       </div>
 
       <div id="tasks" className="p-5">
-        <div
-          className="task d-flex"
-          onClick={(e) => {
-            console.log((e.target as any).querySelector('h6').innerText, '❤')
-            setInfo((e.target as any).querySelector('h6').innerText)
-            setRightPanelCollapsed(false)
-          }}
-        >
-          <IconButton>
-            <RadioButtonUnchecked />
-          </IconButton>
-          <div className="exactTask p-3 d-flex justify-content-between">
-            <div>
-              <h6>Task #1</h6>
-              <span>
-                <Assignment />
-              </span>
-              <span>Today</span>
-            </div>
-            <IconButton>
-              <StarBorder />
-            </IconButton>
-          </div>
-        </div>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMore />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Completed Tasks</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className="task d-flex">
-              <IconButton>
-                <CheckCircle />
-              </IconButton>
-              <div className="exactTask p-3 d-flex justify-content-between">
-                <div>
-                  <h6>Task #1</h6>
-                  <span>
-                    <Assignment />
-                  </span>
-                  <span>Today</span>
-                </div>
-                <IconButton>
-                  <StarBorder />
-                </IconButton>
-              </div>
-            </div>
-          </AccordionDetails>
-        </Accordion>
+        {tasks && (
+          <>
+            {tasks
+              .filter((e) => !e.completed)
+              .map((task) => {
+                return (
+                  <div
+                    className="task d-flex my-3"
+                    key={task._id}
+                    data-id={task._id}
+                    onClick={(e) => {
+                      setSelectedTask(task)
+                      setRightPanelCollapsed(false)
+                    }}
+                  >
+                    <IconButton
+                      onClick={() =>
+                        updateTask(
+                          task._id,
+                          { completed: true },
+                          'Task Completed',
+                        )
+                      }
+                    >
+                      <RadioButtonUnchecked />
+                    </IconButton>
+                    <div className="exactTask p-3 d-flex justify-content-between">
+                      <div>
+                        <h6>{task.title}</h6>
+                        <span>{task.note && <Assignment />}</span>
+                        {task.due_date && (
+                          <span>{formatDueDate(task.due_date)}</span>
+                        )}
+                      </div>
+                      <IconButton
+                        onClick={() =>
+                          updateTask(
+                            task._id,
+                            { important: !task.important },
+                            task.important
+                              ? 'Task removed from Important'
+                              : 'Task Added to Important',
+                          )
+                        }
+                      >
+                        {task.important ? <Star /> : <StarBorder />}
+                      </IconButton>
+                    </div>
+                  </div>
+                )
+              })}
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMore />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Completed Tasks</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {tasks
+                  .filter((e) => e.completed)
+                  .map((task) => {
+                    return (
+                      <div
+                        className="task d-flex my-3"
+                        key={task._id}
+                        data-id={task._id}
+                        onClick={(e) => {
+                          // console.log(
+                          //   (e.target as any).querySelector('h6').innerText,
+                          //   '❤',
+                          // )
+                          // setInfo((e.target as any).querySelector('h6').innerText)
+                          setSelectedTask(task)
+                          setRightPanelCollapsed(false)
+                        }}
+                      >
+                        <IconButton
+                          onClick={() =>
+                            updateTask(
+                              task._id,
+                              { completed: false },
+                              'Task Incomplete',
+                            )
+                          }
+                        >
+                          <CheckCircle />
+                        </IconButton>
+                        <div className="exactTask p-3 d-flex justify-content-between">
+                          <div>
+                            <h6>{task.title}</h6>
+                            <span>{task.note && <Assignment />}</span>
+                            {task.due_date && (
+                              <span>{formatDueDate(task.due_date)}</span>
+                            )}
+                          </div>
+                          <IconButton
+                            onClick={() =>
+                              updateTask(
+                                task._id,
+                                { important: !task.important },
+                                task.important
+                                  ? 'Task removed from Important'
+                                  : 'Task Added to Important',
+                              )
+                            }
+                          >
+                            {task.important ? <Star /> : <StarBorder />}
+                          </IconButton>
+                        </div>
+                      </div>
+                    )
+                  })}
+              </AccordionDetails>
+            </Accordion>
+          </>
+        )}
       </div>
 
       <Box className="addTaskBox d-flex align-items-center">
-        <IconButton>
+        <IconButton onClick={() => setNewTask(inputText)}>
           <ControlPoint sx={{ mr: 1, my: 0.5 }} />
         </IconButton>
-        <TextField id="addTaskInput" label="Add a new task" variant="filled" />
+        <TextField
+          onChange={(e) => setInputText((e as any).target.value)}
+          id="addTaskInput"
+          label="Add a new task"
+          variant="filled"
+        />
       </Box>
     </div>
   )

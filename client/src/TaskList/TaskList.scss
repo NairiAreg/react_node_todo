@@ -6,6 +6,18 @@
   justify-content: space-between;
   flex: 1;
   background-color: $mainDark;
+  max-height: 100vh;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 7px;
+    background-color: $mainText;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px $mainDark;
+    background-color: $mainLight;
+  }
   .myDayTitle {
     * {
       color: $white;
@@ -28,7 +40,7 @@
         }
       }
     }
-    >:last-child {
+    > :last-child {
       margin-top: 15px;
       background-color: unset;
       color: $mainText;
@@ -43,12 +55,15 @@
     }
   }
   .addTaskBox {
+    position: sticky;
+    bottom: 0;
     div {
       min-height: 50px;
       label {
         text-indent: 30px;
       }
       width: fill-available;
+      background: $mainDark;
       #addTaskInput {
         color: $white;
         text-indent: 30px;

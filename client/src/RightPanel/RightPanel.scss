@@ -45,7 +45,15 @@
       color: $mainText;
     }
   }
-  button {
+  button, div {
+    * {
+      color: $mainText;
+      border-color: $mainText;
+    }
+    legend {
+      background-color: $mainLight;
+      padding: 10px;
+    }
     border-color: $mainText;
     color: $mainText;
   }

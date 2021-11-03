@@ -3,43 +3,38 @@ import React, { useState, useEffect, useCallback } from 'react'
 
 import './RightPanel.scss'
 import {
-  Menu as MenuIcon,
-  Search as SearchIcon,
   Today,
   StarBorder,
+  Star,
   DeleteForever,
-  TaskAlt,
   Repeat,
-  FormatListNumbered,
-  PlaylistAddCheck,
-  PersonAdd,
   DateRange,
+  CheckCircle,
   ArrowForwardIos,
-  Settings,
   RadioButtonUnchecked,
-  Assignment,
-  Logout,
 } from '@mui/icons-material'
-import {
-  IconButton,
-  TextField,
-  Box,
-  Tooltip,
-  Button,
-  Divider,
-  Avatar,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-} from '@mui/material'
-function RightPanel({ rightPanelCollapsed, setRightPanelCollapsed }: any) {
+import { IconButton, TextField, Tooltip, Button, Divider } from '@mui/material'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DatePicker from '@mui/lab/DatePicker';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+function RightPanel({
+  rightPanelCollapsed,
+  setRightPanelCollapsed,
+  selectedTask,
+  setSelectedTask,
+  updateTask,
+}: any) {
+  const [tmpNoteVal, setTmpNoteVal] = useState('')
   // const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
   // const [count, setCount] = useState(0);
   useEffect(() => {
     // console.log(parentCallback,"😁")
     // // props.parentCallback(1)
     // parentCallback(count + 1)
-  }, [])
+    // console.log(selectedTask, '😁😁😁')
+    setTmpNoteVal(selectedTask?.note)
+  }, [selectedTask])
   return (
     <div
       id="rightPanel"
@@ -48,35 +43,83 @@ function RightPanel({ rightPanelCollapsed, setRightPanelCollapsed }: any) {
       } position-relative d-flex flex-column`}
     >
       <div className="task d-flex">
-        <IconButton>
-          <RadioButtonUnchecked />
+        <IconButton
+          onClick={() =>
+            updateTask(
+              selectedTask._id,
+              { completed: !selectedTask.completed },
+              selectedTask?.completed ? 'Task Incomplete' : 'Task Complete',
+            )
+          }
+        >
+          {selectedTask?.completed ? <CheckCircle /> : <RadioButtonUnchecked />}
         </IconButton>
         <div className="exactTask p-3 d-flex justify-content-between align-items-center w-100">
           <div>
-            <h3>Task #1</h3>
+            <h3>{selectedTask?.title}</h3>
           </div>
-          <IconButton>
-            <StarBorder />
+          <IconButton
+            onClick={() =>
+              updateTask(
+                selectedTask._id,
+                { important: !selectedTask.important },
+                selectedTask?.important
+                  ? 'Task removed from Important'
+                  : 'Task Added to Important',
+              )
+            }
+          >
+            {selectedTask?.important ? <Star /> : <StarBorder />}
           </IconButton>
         </div>
       </div>
 
       <Divider />
 
-      <Button className={`mx-1`} variant="outlined" startIcon={<Today />}>
+      <Button
+        className={`mx-1`}
+        variant="outlined"
+        startIcon={<Today />}
+        onClick={() =>
+          updateTask(
+            selectedTask._id,
+            { due_date: new Date() },
+            'Task Added to Today',
+          )
+        }
+      >
         Add to Today
       </Button>
 
-      <Button className={`mx-1`} variant="outlined" startIcon={<DateRange />}>
-        Add due date
-      </Button>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DatePicker
+            label="Due Date"
+            value={selectedTask?.due_date}
+            className={`mx-1`}
+            onChange={(date) => {
+              // setDueDateValue(date)
+              updateTask(
+                selectedTask?._id,
+                { due_date: date },
+                'Due Date Changed',
+              )
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
 
       <Button className={`mx-1`} variant="outlined" startIcon={<Repeat />}>
         Repeat
       </Button>
 
       <div id="notesParent" className="p-3">
-        <TextField id="notes" label="Notes" multiline maxRows={6} />
+        <TextField value={tmpNoteVal} id="notes" label="Notes" multiline maxRows={6} onBlur={(e)=> {
+          updateTask(
+            selectedTask?._id,
+            { note: e.target.value },
+            'Note changed',
+          )
+        }} onChange={e=>setTmpNoteVal(e.target.value)} />
       </div>
 
       <div className="d-flex align-items-end justify-content-around px-3 bottomButtons">
@@ -89,7 +132,7 @@ function RightPanel({ rightPanelCollapsed, setRightPanelCollapsed }: any) {
             <ArrowForwardIos />
           </IconButton>
         </Tooltip>
-        <p className="mb-2">Created on Sun. Oct 24</p>
+        <p className="mb-2">Created on {selectedTask && (new Date(selectedTask.createdAt).toDateString())}</p>
         <Tooltip arrow title={`Delete this task`}>
           <IconButton>
             <DeleteForever />
