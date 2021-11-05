@@ -18,8 +18,6 @@ const taskSchema = new mongoose.Schema({
     },
     task_list: {
         type: String,
-        min: 6,
-        max: 50,
         required: false
     },
     note: {
@@ -34,7 +32,6 @@ const taskSchema = new mongoose.Schema({
     },
     completed: {
         type: Boolean,
-        max: 365,
         required: true,
         default: false
     },

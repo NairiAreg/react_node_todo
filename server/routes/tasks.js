@@ -3,8 +3,8 @@ const verify = require('./verifyToken')
 const Task = require('../model/Task')
 
 //! Create Task
-router.post('/',verify, async (req, res) => {
-console.log("🐱‍🏍🐱‍🏍",req.body,"🐱‍🏍🐱‍🏍")
+router.post('/', verify, async (req, res) => {
+    console.log("🐱‍🏍🐱‍🏍", req.body, "🐱‍🏍🐱‍🏍")
     const task = new Task({
         user_id: req.body.user_id,
         title: req.body.title,
@@ -25,30 +25,37 @@ console.log("🐱‍🏍🐱‍🏍",req.body,"🐱‍🏍🐱‍🏍")
 })
 
 //! Read (Get) Tasks
-router.get('/',verify, async (req, res) => {
-// console.log("🐱‍🏍🐱‍🏍",req.user._id,"🐱‍🏍🐱‍🏍")
-   const task = Task.find({user_id: req.user._id},(err,data) => {
-       if(err) res.status(400).send("Error: " + err)
-       res.send(data)
+router.get('/', verify, async (req, res) => {
+    // console.log("🐱‍🏍🐱‍🏍",req.user._id,"🐱‍🏍🐱‍🏍")
+    const task = Task.find({
+        user_id: req.user._id
+    }, (err, data) => {
+        if (err) res.status(400).send("Error: " + err)
+        res.send(data)
     })
     // console.log("❤❤", task, "❤❤")
 })
 
 //! Update Task
-router.put('/:taskId',verify, async (req, res) => {
-    console.log("🐱‍🏍🐱‍🏍",req.body,req.params,req.params.taskId,"🐱‍🏍🐱‍🏍")
-    await Task.findOneAndUpdate({ "_id": req.params.taskId },req.body);
-        // console.log("❤❤", task, "❤❤")
-        res.send("Updated")
-    })
-    
+router.put('/:taskId', verify, async (req, res) => {
+    console.log("🐱‍🏍🐱‍🏍", req.body, req.params, req.params.taskId, "🐱‍🏍🐱‍🏍")
+    await Task.findOneAndUpdate({
+        "_id": req.params.taskId
+    }, req.body);
+    // console.log("❤❤", task, "❤❤")
+    res.send("Updated")
+})
+
 //! Delete Task
-router.delete('/:taskId',verify, async (req, res) => {
-    console.log("🐱‍🏍🐱‍🏍",req.body,req.params,req.params.taskId,"🐱‍🏍🐱‍🏍")
-    await Task.findOneAndDelete({ "_id": req.params.taskId });
-        // console.log("❤❤", task, "❤❤")
-        res.send("Deleted")
-    })
-    
+router.delete('/:taskId', verify, async (req, res) => {
+    console.log("🐱‍🏍🐱‍🏍", req.body, req.params, req.params.taskId, "🐱‍🏍🐱‍🏍")
+    await Task.findOneAndDelete({
+        "_id": req.params.taskId
+    });
+    // console.log("❤❤", task, "❤❤")
+    res.send("Deleted")
+})
+
+
 
 module.exports = router

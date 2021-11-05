@@ -47,6 +47,7 @@ function TaskList({
 }: any) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [inputText, setInputText] = useState('')
+  const [newTaskInputValue, setNewTaskInputValue] = useState('')
   const open = anchorEl
   const handleClickListOptions = (event: any) => {
     setAnchorEl(event.currentTarget)
@@ -207,8 +208,9 @@ function TaskList({
       </div>
 
       <div id="tasks" className="p-5">
-        {tasks && (
+        {tasks?.length ? (
           <>
+            {console.log(tasks,"🧡🧡🧡🧡🧡🧡")}
             {tasks
               .filter((e) => !e.completed)
               .map((task) => {
@@ -324,15 +326,30 @@ function TaskList({
               </AccordionDetails>
             </Accordion>
           </>
+        ) : (
+          <div className="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          <Air sx={{ fontSize: 100 }}/>
+          <h1>No Tasks</h1>
+          </div>
         )}
       </div>
 
       <Box className="addTaskBox d-flex align-items-center">
-        <IconButton onClick={() => setNewTask(inputText)}>
+        <IconButton
+          onClick={() => {
+            // setNewTaskInputValue("")
+            setNewTask(inputText)
+            setInputText('')
+          }}
+        >
           <ControlPoint sx={{ mr: 1, my: 0.5 }} />
         </IconButton>
         <TextField
-          onChange={(e) => setInputText((e as any).target.value)}
+          onChange={(e) => {
+            // setNewTaskInputValue("")
+            setInputText(e.target.value)
+          }}
+          value={inputText}
           id="addTaskInput"
           label="Add a new task"
           variant="filled"

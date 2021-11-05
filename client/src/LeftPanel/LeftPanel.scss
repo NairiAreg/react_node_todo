@@ -6,6 +6,18 @@
   height: 100vh;
   background-color: $mainLight;
   overflow: hidden;
+  max-height: 100vh;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 7px;
+    background-color: $mainText;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px $mainDark;
+    background-color: $mainLight;
+  }
   &.collapsed {
     max-width: 50px !important;
     align-items: center;
@@ -28,7 +40,43 @@
   .menuToggleIcon {
     right: 0;
   }
+  .addTaskListBox {
+    position: sticky;
+    bottom: 0;
+    background: $mainLight;
+    div {
+      min-height: 50px;
+      width: fill-available;
+      label {
+        text-indent: 30px;
+        color: $mainText;
+        &.Mui-focused {
+          color: $white;
+        }
+      }
+      #addTaskTitleInput {
+        color: $white;
+        cursor: pointer;
+        &::placeholder {
+          left: 30px;
+        }
+      }
+      div {
+        &::after {
+          border-color: $white;
+        }
+        &::before {
+          border-color: $mainText;
+        }
+      }
+    }
+    svg {
+      color: $mainText;
+    }
+  }
   .leftPanelBody {
+    flex: 1;
+
     // min-width: 320px;
     > * {
       margin: 10px 0;

@@ -17,6 +17,7 @@ import {
   Settings,
   VisibilityOff,
   Visibility,
+  ControlPoint,
   Logout,
 } from '@mui/icons-material'
 import {
@@ -43,6 +44,9 @@ function LeftPanel({
   register,
   username,
   tasks,
+  setTaskForTaskList,
+  taskLists,
+  createTaskList,
   setUsername,
   loginEmail,
   filteredTasks,
@@ -55,6 +59,8 @@ function LeftPanel({
   const [openAuthModal, setOpenAuthModal] = useState(false)
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
+  const [randomAvatarBackground, setRandomAvatarBackground] = useState('grey')
+  const [newTaskListTitle, setNewTaskListTitle] = useState('')
 
   interface State {
     amount: string
@@ -112,13 +118,21 @@ function LeftPanel({
     'rgb(255,0,255)',
   ]
   useEffect(() => {
-    console.log(user, user?._id, user?.name, '💋💋💋')
+    setRandomAvatarBackground(
+      avatarColors[Math.round(Math.random() * avatarColors.length - 1)],
+    )
+    // alert(randomAvatarBackground)
+  }, [])
+  useEffect(() => {
+    // console.log(user, user?._id, user?.name, '💋💋💋')
   }, [user])
 
   return (
     <div
       id="leftPanel"
-      className={`${leftPanelCollapsed ? 'collapsed' : ''} position-relative`}
+      className={`${
+        leftPanelCollapsed ? 'collapsed' : ''
+      } position-relative d-flex flex-column`}
     >
       <IconButton
         className="menuToggleIcon position-absolute"
@@ -138,13 +152,10 @@ function LeftPanel({
                 ) : (
                   <Avatar
                     sx={{
-                      backgroundColor:
-                        avatarColors[
-                          Math.round(Math.random() * avatarColors.length - 1)
-                        ],
+                      backgroundColor: randomAvatarBackground,
                     }}
                   >
-                    {console.log(123123, user, user.name)}
+                    {/* {console.log(123123, user, user.name)} */}
                     {user.name
                       .split(' ')
                       .map((e) => e[0])
@@ -421,29 +432,49 @@ function LeftPanel({
 
         <Divider />
 
-        <Tooltip arrow title={`${leftPanelCollapsed ? 'Custom Task #1' : ''}`}>
-          <Button
-            className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
-            variant="outlined"
-            startIcon={<FormatListNumbered />}
+        {taskLists?.map((taskList) => (
+          <Tooltip
+            arrow
+            key={taskList._id}
+            title={`${leftPanelCollapsed ? taskList.title : ''}`}
           >
-            {!leftPanelCollapsed ? 'Custom Tasks List' : ''}
-          </Button>
-        </Tooltip>
-        <Tooltip arrow title={`${leftPanelCollapsed ? 'New List' : ''}`}>
-          <Button
-            className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
-            variant="outlined"
-            startIcon={<PlaylistAddCheck />}
-          >
-            {!leftPanelCollapsed ? 'New List' : ''}
-          </Button>
-        </Tooltip>
-        {/* //TODO remove exampel routes */}
-        {/* <Link to="/">Home</Link> */}
-        {/* <Link to="/foo">Foo</Link> */}
-        {/* <Link to="/bar">Bar</Link> */}
+            <Button
+              className={`${!leftPanelCollapsed ? 'mx-3' : 'mx-1'}`}
+              variant="outlined"
+              startIcon={<FormatListNumbered />}
+              onClick={() => {
+                setTaskListConfig({
+                  title: taskList.title,
+                  allowRename: true,
+                })
+                setTaskForTaskList(taskList._id)
+                setFilteredTasks(tasks.filter((e) => e.task_list === taskList._id))
+              }}
+            >
+              {!leftPanelCollapsed ? taskList.title : ''}
+            </Button>
+          </Tooltip>
+        ))}
       </div>
+      <Box className="addTaskListBox d-flex align-items-center">
+        <IconButton
+          onClick={() => {
+            createTaskList(newTaskListTitle)
+            setNewTaskListTitle('')
+          }}
+        >
+          <ControlPoint sx={{ mr: 1, my: 0.5 }} />
+        </IconButton>
+        <TextField
+          onChange={(e) => {
+            setNewTaskListTitle(e.target.value)
+          }}
+          value={newTaskListTitle}
+          id="addTaskTitleInput"
+          label="Add a new task"
+          variant="filled"
+        />
+      </Box>
     </div>
   )
 }

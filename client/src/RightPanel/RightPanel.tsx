@@ -16,14 +16,15 @@ import {
 import { IconButton, TextField, Tooltip, Button, Divider } from '@mui/material'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import DatePicker from '@mui/lab/DatePicker';
-import DateAdapter from '@mui/lab/AdapterDateFns';
+import DatePicker from '@mui/lab/DatePicker'
+import DateAdapter from '@mui/lab/AdapterDateFns'
 function RightPanel({
   rightPanelCollapsed,
   setRightPanelCollapsed,
   selectedTask,
   setSelectedTask,
   updateTask,
+  deleteTask,
 }: any) {
   const [tmpNoteVal, setTmpNoteVal] = useState('')
   // const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
@@ -32,8 +33,8 @@ function RightPanel({
     // console.log(parentCallback,"😁")
     // // props.parentCallback(1)
     // parentCallback(count + 1)
-    // console.log(selectedTask, '😁😁😁')
-    setTmpNoteVal(selectedTask?.note)
+    console.log(selectedTask, '😁😁😁')
+    setTmpNoteVal(selectedTask?.note ? selectedTask.note : "")
   }, [selectedTask])
   return (
     <div
@@ -92,34 +93,42 @@ function RightPanel({
       </Button>
 
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Due Date"
-            value={selectedTask?.due_date}
-            className={`mx-1`}
-            onChange={(date) => {
-              // setDueDateValue(date)
-              updateTask(
-                selectedTask?._id,
-                { due_date: date },
-                'Due Date Changed',
-              )
-            }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
+        <DatePicker
+          label="Due Date"
+          value={selectedTask?.due_date}
+          className={`mx-1`}
+          onChange={(date) => {
+            // setDueDateValue(date)
+            updateTask(
+              selectedTask?._id,
+              { due_date: date },
+              'Due Date Changed',
+            )
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+      </LocalizationProvider>
 
       <Button className={`mx-1`} variant="outlined" startIcon={<Repeat />}>
         Repeat
       </Button>
 
       <div id="notesParent" className="p-3">
-        <TextField value={tmpNoteVal} id="notes" label="Notes" multiline maxRows={6} onBlur={(e)=> {
-          updateTask(
-            selectedTask?._id,
-            { note: e.target.value },
-            'Note changed',
-          )
-        }} onChange={e=>setTmpNoteVal(e.target.value)} />
+        <TextField
+          value={tmpNoteVal}
+          id="notes"
+          label="Notes"
+          multiline
+          maxRows={6}
+          onBlur={(e) => {
+            updateTask(
+              selectedTask?._id,
+              { note: e.target.value },
+              'Note changed',
+            )
+          }}
+          onChange={(e) => setTmpNoteVal(e.target.value)}
+        />
       </div>
 
       <div className="d-flex align-items-end justify-content-around px-3 bottomButtons">
@@ -132,9 +141,14 @@ function RightPanel({
             <ArrowForwardIos />
           </IconButton>
         </Tooltip>
-        <p className="mb-2">Created on {selectedTask && (new Date(selectedTask.createdAt).toDateString())}</p>
+        <p className="mb-2">
+          Created on{' '}
+          {selectedTask && new Date(selectedTask.createdAt).toDateString()}
+        </p>
         <Tooltip arrow title={`Delete this task`}>
-          <IconButton>
+          <IconButton
+            onClick={() => deleteTask(selectedTask._id, 'Task Deleted')}
+          >
             <DeleteForever />
           </IconButton>
         </Tooltip>

@@ -4,16 +4,15 @@ import LeftPanel from './LeftPanel/LeftPanel'
 import RightPanel from './RightPanel/RightPanel'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-// TODO remove example routes
 import TaskList from './TaskList/TaskList'
-// import Foo from './Foo/Foo'
-// import Bar from './Bar/Bar'
 
 function App(): any {
   const [popupMessage, setPopupMessage] = useState('')
   const [user, setUser] = useState<any>(null)
-  const [taskListConfig, setTaskListConfig] = useState<object>({title:"All Tasks",allowRename:false})
+  const [taskListConfig, setTaskListConfig] = useState<object>({
+    title: 'All Tasks',
+    allowRename: false,
+  })
   const [tasks, setTasks] = useState<any>(null)
   const [selectedTask, setSelectedTask] = useState<object>(null)
   const [filteredTasks, setFilteredTasks] = useState<any>(null)
@@ -23,6 +22,8 @@ function App(): any {
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [newTask, setNewTask] = useState('')
+  const [taskLists, setTaskLists] = useState(null)
+  const [taskForTaskList, setTaskForTaskList] = useState('')
 
   useEffect(() => {
     if (!newTask) return
@@ -33,20 +34,22 @@ function App(): any {
       body: JSON.stringify({
         user_id: user._id,
         title: newTask,
+        ...taskForTaskList && {task_list: taskForTaskList}
       }),
     }).then((response) => {
       response.json().then((data) => {
         if (!response.ok) {
           setPopupMessage(JSON.stringify([false, data]))
         } else {
+          console.log('New Task added 💨💨💨', data)
           setPopupMessage(JSON.stringify([true, 'Task Added']))
           setTasks((tasks) => [...tasks, data])
         }
       })
     })
   }, [newTask])
-  const updateTask = (taskId:string,query:object,message:string) => {
-    console.log("💹🈯💹",taskId,query)
+  const updateTask = (taskId: string, query: object, message: string) => {
+    console.log('💹🈯💹', taskId, query)
     let jwt = localStorage.getItem('jwt') ? localStorage.getItem('jwt') : ''
     fetch(`http://localhost:3000/api/tasks/${taskId}`, {
       method: 'PUT',
@@ -58,16 +61,21 @@ function App(): any {
           setPopupMessage(JSON.stringify([false, data]))
         } else {
           setPopupMessage(JSON.stringify([true, message]))
-          setTasks(filteredTasks.map(e=>e._id == taskId ? {...e,...query} : e))
-          selectedTask && setSelectedTask({...selectedTask, ...query})
+          setTasks(
+            filteredTasks.map((e) =>
+              e._id == taskId ? { ...e, ...query } : e,
+            ),
+          )
+          setFilteredTasks(tasks)
+          selectedTask && setSelectedTask({ ...selectedTask, ...query })
         }
       })
     })
   }
-  const deleteTask = (taskId:string,message:string) => {
+  const deleteTask = (taskId: string, message: string) => {
     let jwt = localStorage.getItem('jwt') ? localStorage.getItem('jwt') : ''
     fetch(`http://localhost:3000/api/tasks/${taskId}`, {
-      method: 'PUT',
+      method: 'DELETE',
       headers: { 'Content-Type': 'application/json', 'auth-token': jwt },
     }).then((response) => {
       response.text().then((data) => {
@@ -75,7 +83,7 @@ function App(): any {
           setPopupMessage(JSON.stringify([false, data]))
         } else {
           setPopupMessage(JSON.stringify([true, message]))
-          setTasks(filteredTasks.map(e=>e._id != taskId))
+          setTasks(filteredTasks.filter((e) => e._id != taskId))
           selectedTask && setSelectedTask(null)
         }
       })
@@ -123,8 +131,21 @@ function App(): any {
             console.error(JSON.stringify(data))
           } else {
             console.log(JSON.stringify('Got all Data 🐱‍🏍🐱‍🏍🐱‍🏍'))
-            // console.log("😁😁",JSON.parse(data))
             setTasks(JSON.parse(data))
+          }
+        })
+      })
+      fetch('http://localhost:3000/api/tasklists', {
+        method: 'GET',
+        headers: { 'auth-token': jwt, 'Content-Type': 'application/json' },
+      }).then((response) => {
+        // console.log(response,"✔✔✔")
+        response.json().then((data) => {
+          if (!response.ok) {
+            console.error(JSON.stringify(data))
+          } else {
+            setTaskLists(data)
+            console.log(taskLists)
           }
         })
       })
@@ -133,7 +154,8 @@ function App(): any {
       console.log('😘😘😘', tasks)
       setFilteredTasks(tasks)
     }
-  }, [user, tasks])
+    console.log(11111111)
+  }, [tasks, user, taskLists])
   const login = () => {
     fetch('http://localhost:3000/api/user/login', {
       method: 'POST',
@@ -172,8 +194,26 @@ function App(): any {
         }
       })
     })
-    // .then((response) => response.text())
-    // .then((data) => console.log('✌✌', data, '✌✌'))
+  }
+  const createTaskList = (title) => {
+    if (!taskLists) return
+    let jwt = localStorage.getItem('jwt') ? localStorage.getItem('jwt') : ''
+    fetch('http://localhost:3000/api/tasklists/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'auth-token': jwt },
+      body: JSON.stringify({
+        title: title,
+      }),
+    }).then((response) => {
+      response.text().then((data) => {
+        if (!response.ok) {
+          setPopupMessage(JSON.stringify([false, data]))
+        } else {
+          setTaskLists([...taskLists, JSON.parse(data)])
+          setPopupMessage(JSON.stringify([true, 'Task List created']))
+        }
+      })
+    })
   }
 
   return (
@@ -183,6 +223,7 @@ function App(): any {
         filteredTasks={filteredTasks}
         setFilteredTasks={setFilteredTasks}
         tasks={tasks}
+        taskLists={taskLists}
         setUser={setUser}
         setTaskListConfig={setTaskListConfig}
         login={login}
@@ -191,7 +232,9 @@ function App(): any {
         setUsername={setUsername}
         loginEmail={loginEmail}
         setLoginEmail={setLoginEmail}
+        setTaskForTaskList={setTaskForTaskList}
         loginPassword={loginPassword}
+        createTaskList={createTaskList}
         setLoginPassword={setLoginPassword}
       />
       <TaskList
@@ -210,6 +253,7 @@ function App(): any {
         selectedTask={selectedTask}
         info={info}
         updateTask={updateTask}
+        deleteTask={deleteTask}
       />
       <ToastContainer
         position="top-right"
