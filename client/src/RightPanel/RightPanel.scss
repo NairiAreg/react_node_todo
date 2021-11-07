@@ -45,7 +45,8 @@
       color: $mainText;
     }
   }
-  button, div {
+  button,
+  div {
     * {
       color: $mainText;
       border-color: $mainText;
@@ -82,5 +83,12 @@
         }
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  #rightPanel {
+    position: absolute !important;
+    right: 0;
   }
 }

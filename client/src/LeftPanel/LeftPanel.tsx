@@ -121,6 +121,7 @@ function LeftPanel({
     setRandomAvatarBackground(
       avatarColors[Math.round(Math.random() * avatarColors.length - 1)],
     )
+    window.innerWidth < 768 && setLeftPanelCollapsed(true)
     // alert(randomAvatarBackground)
   }, [])
   useEffect(() => {
@@ -131,8 +132,8 @@ function LeftPanel({
     <div
       id="leftPanel"
       className={`${
-        leftPanelCollapsed ? 'collapsed' : ''
-      } position-relative d-flex flex-column`}
+        (leftPanelCollapsed) ? 'collapsed' : ''
+      } d-flex flex-column`}
     >
       <IconButton
         className="menuToggleIcon position-absolute"
@@ -349,11 +350,11 @@ function LeftPanel({
           }}
         >
           <div className="position-relative">
-            <IconButton className="position-absolute ps-2">
+            <IconButton className={`position-absolute ${leftPanelCollapsed ? 'ps-3' : ''} `}>
               <SearchIcon sx={{ mr: 1, my: 0.5 }} />
             </IconButton>
             <Tooltip arrow title={`${leftPanelCollapsed ? 'Search' : ''}`}>
-              <TextField id="search" label="Search" variant="filled" />
+              <TextField id="search" label={`${leftPanelCollapsed ? '' : 'Search'}`} variant="filled" />
             </Tooltip>
           </div>
         </Box>
@@ -366,7 +367,7 @@ function LeftPanel({
             onClick={() => {
               setTaskListConfig({
                 title: 'Today',
-                allowRename: false,
+                allowRename: false
               })
               setFilteredTasks(
                 tasks.filter(
@@ -444,8 +445,12 @@ function LeftPanel({
               startIcon={<FormatListNumbered />}
               onClick={() => {
                 setTaskListConfig({
+                  taskListId: taskList._id,
                   title: taskList.title,
                   allowRename: true,
+                  allowTheme: true,
+                  taskListDate: taskList.createdAt,
+                  theme: taskList.theme
                 })
                 setTaskForTaskList(taskList._id)
                 setFilteredTasks(tasks.filter((e) => e.task_list === taskList._id))

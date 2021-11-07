@@ -20,7 +20,7 @@
   }
   .myDayTitle {
     * {
-      color: $white;
+      color: inherit;
     }
   }
   #tasks {
@@ -28,7 +28,7 @@
     .task {
       .exactTask {
         cursor: pointer;
-        color: #919191;
+        color: $mainText;
         border: solid 1px;
         flex: 1;
         span {
@@ -49,7 +49,7 @@
           color: $mainText;
         }
       }
-      h6 {
+      div div div h6 {
         text-decoration: line-through;
       }
     }
@@ -65,7 +65,7 @@
       width: fill-available;
       background: $mainDark;
       #addTaskInput {
-        color: $white;
+        color: inherit;
         text-indent: 30px;
         cursor: pointer;
         &::placeholder {
@@ -83,7 +83,7 @@
       label {
         color: $mainText;
         &.Mui-focused {
-          color: $white;
+          color: inherit;
         }
       }
     }
@@ -100,6 +100,14 @@
     border: $mainDark solid;
     &:hover {
       border-color: $mainText;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  #taskList {
+    >:first-child {
+      padding-left: 70px !important;
     }
   }
 }

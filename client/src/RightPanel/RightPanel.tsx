@@ -33,7 +33,7 @@ function RightPanel({
     // console.log(parentCallback,"😁")
     // // props.parentCallback(1)
     // parentCallback(count + 1)
-    console.log(selectedTask, '😁😁😁')
+    // console.log(selectedTask, '😁😁😁')
     setTmpNoteVal(selectedTask?.note ? selectedTask.note : "")
   }, [selectedTask])
   return (

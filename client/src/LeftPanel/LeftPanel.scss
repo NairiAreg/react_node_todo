@@ -6,6 +6,7 @@
   height: 100vh;
   background-color: $mainLight;
   overflow: hidden;
+  position: relative;
   max-height: 100vh;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -250,4 +251,11 @@
 
 .authButton {
   border: solid !important;
+}
+
+@media(max-width: 768px){
+  #leftPanel {
+    position: absolute;
+    z-index: 1;
+  }
 }

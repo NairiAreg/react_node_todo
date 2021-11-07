@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './TaskList.scss'
 import {
-  Settings,
-  Logout,
   MoreVert,
   DriveFileRenameOutline,
   Sort,
@@ -12,6 +10,7 @@ import {
   SortByAlpha,
   EventNote,
   Palette,
+  DeleteForever,
   Assignment,
   Air,
   ExpandMore,
@@ -37,17 +36,23 @@ import {
   ListItemIcon,
 } from '@mui/material'
 function TaskList({
-  setInfo,
   setRightPanelCollapsed,
   setNewTask,
+  setFilteredTasks,
+  updateTaskList,
   setSelectedTask,
+  deleteTaskList,
   taskListConfig,
   tasks,
   updateTask,
 }: any) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [inputText, setInputText] = useState('')
-  const [newTaskInputValue, setNewTaskInputValue] = useState('')
+  const [createdAtSortFactor, setCreatedAtSortFactor] = useState(-1)
+  const [dueDateSortFactor, setDueDateSortFactor] = useState(-1)
+  const [importanceSortFactor, setImportanceSortFactor] = useState(true)
+  const [alphaSortFactor, setAlphaSortFactor] = useState(true)
+  const [themeStyle, setThemeStyle] = useState({})
   const open = anchorEl
   const handleClickListOptions = (event: any) => {
     setAnchorEl(event.currentTarget)
@@ -55,10 +60,20 @@ function TaskList({
   const handleClose = () => {
     setAnchorEl(null)
   }
+  const themeColors = [
+    '#919191',
+    '#61BD4F',
+    '#F2D600',
+    '#FF9F1A',
+    '#EB5A46',
+    '#C377E0',
+    '#0079BF',
+  ]
   useEffect(() => {
-    console.log('🅰🅰🅰', tasks, 123123)
-  }, [tasks])
-  const formatDueDate = (date) => {
+    setThemeStyle(taskListConfig.theme ? {color: taskListConfig.theme} : {color: "white"})
+    console.log(taskListConfig)
+  }, [taskListConfig])
+  const formatDate = (date) => {
     if (new Date(date).toDateString() == new Date().toDateString())
       return 'Today'
     if (
@@ -71,11 +86,15 @@ function TaskList({
   }
 
   return (
-    <div id="taskList">
+    <div id="taskList" style={themeStyle}>
       <div className="d-flex justify-content-between p-3">
         <div className="d-flex flex-column myDayTitle">
           <h1>{taskListConfig.title}</h1>
-          <h6>{new Date().toDateString()}</h6>
+          <h6>
+            {taskListConfig.taskListDate
+              ? formatDate(taskListConfig.taskListDate)
+              : new Date().toDateString()}
+          </h6>
         </div>
         <div>
           <Tooltip arrow title="List Options">
@@ -131,7 +150,19 @@ function TaskList({
               Sort
               <List className="sortOptionsPopup position-absolute end-100">
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      setFilteredTasks([
+                        ...tasks.filter(
+                          (e) => e.important == importanceSortFactor,
+                        ),
+                        ...tasks.filter(
+                          (e) => !e.important == importanceSortFactor,
+                        ),
+                      ])
+                      setImportanceSortFactor(!importanceSortFactor)
+                    }}
+                  >
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>
@@ -139,7 +170,22 @@ function TaskList({
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      setFilteredTasks([
+                        ...tasks
+                          .filter((e) => e.due_date)
+                          .sort(
+                            (a, b) =>
+                              (new Date(a.due_date).getTime() -
+                                new Date(b.due_date).getTime()) *
+                              dueDateSortFactor,
+                          ),
+                        ...tasks.filter((e) => !e.due_date),
+                      ])
+                      setDueDateSortFactor(dueDateSortFactor * -1)
+                    }}
+                  >
                     <ListItemIcon>
                       <Today />
                     </ListItemIcon>
@@ -147,7 +193,22 @@ function TaskList({
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      setFilteredTasks(
+                        tasks.sort((a, b) =>
+                          a.title.toUpperCase() < b.title.toUpperCase() ==
+                          alphaSortFactor
+                            ? -1
+                            : a.title.toUpperCase() > b.title.toUpperCase() ==
+                              alphaSortFactor
+                            ? 1
+                            : 0,
+                        ),
+                      )
+                      setAlphaSortFactor(!alphaSortFactor)
+                    }}
+                  >
                     <ListItemIcon>
                       <SortByAlpha />
                     </ListItemIcon>
@@ -155,7 +216,19 @@ function TaskList({
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      setFilteredTasks(
+                        tasks.sort(
+                          (a, b) =>
+                            (new Date(a.createdAt).getTime() -
+                              new Date(b.createdAt).getTime()) *
+                            createdAtSortFactor,
+                        ),
+                      )
+                      setCreatedAtSortFactor(createdAtSortFactor * -1)
+                    }}
+                  >
                     <ListItemIcon>
                       <EventNote />
                     </ListItemIcon>
@@ -165,44 +238,35 @@ function TaskList({
               </List>
             </MenuItem>
 
-            <MenuItem>
-              <ListItemIcon>
-                <Palette fontSize="small" />
-              </ListItemIcon>
-              Change Theme
-              <List className="sortOptionsPopup themePopup position-absolute end-100">
-                <ListItem disablePadding>
-                  <ListItemButton
-                    style={{ backgroundColor: '#61BD4F' }}
-                  ></ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    style={{ backgroundColor: '#F2D600' }}
-                  ></ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    style={{ backgroundColor: '#FF9F1A' }}
-                  ></ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    style={{ backgroundColor: '#EB5A46' }}
-                  ></ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    style={{ backgroundColor: '#C377E0' }}
-                  ></ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    style={{ backgroundColor: '#0079BF' }}
-                  ></ListItemButton>
-                </ListItem>
-              </List>
-            </MenuItem>
+            {taskListConfig.allowTheme && (
+              <MenuItem>
+                <ListItemIcon>
+                  <Palette fontSize="small" />
+                </ListItemIcon>
+                Change Theme
+                <List className="sortOptionsPopup themePopup position-absolute end-100">
+                  {themeColors.map((e) => (
+                    <ListItem disablePadding key={e}>
+                      <ListItemButton
+                        style={{ backgroundColor: e }}
+                        onClick={()=>{
+                          updateTaskList(taskListConfig.taskListId,{theme:e},'Task List Theme Changed')
+                        }}
+                      ></ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </MenuItem>
+            )}
+            {taskListConfig.allowRename && (
+              <MenuItem
+                onClick={() => {
+                  deleteTaskList(taskListConfig.taskListId)
+                }}
+              >
+                <DeleteForever /> Delete Task List
+              </MenuItem>
+            )}
           </Menu>
         </div>
       </div>
@@ -210,7 +274,7 @@ function TaskList({
       <div id="tasks" className="p-5">
         {tasks?.length ? (
           <>
-            {console.log(tasks,"🧡🧡🧡🧡🧡🧡")}
+            {/* {console.log(tasks, '🧡🧡🧡🧡🧡🧡')} */}
             {tasks
               .filter((e) => !e.completed)
               .map((task) => {
@@ -235,16 +299,16 @@ function TaskList({
                     >
                       <RadioButtonUnchecked />
                     </IconButton>
-                    <div className="exactTask p-3 d-flex justify-content-between">
+                    <div className="exactTask p-3 d-flex justify-content-between position-relative">
                       <div>
                         <h6>{task.title}</h6>
                         <span>{task.note && <Assignment />}</span>
                         {task.due_date && (
-                          <span>{formatDueDate(task.due_date)}</span>
+                          <span>{formatDate(task.due_date)}</span>
                         )}
                       </div>
                       <IconButton
-                        onClick={() =>
+                        onClick={() => {
                           updateTask(
                             task._id,
                             { important: !task.important },
@@ -252,84 +316,84 @@ function TaskList({
                               ? 'Task removed from Important'
                               : 'Task Added to Important',
                           )
-                        }
+                        }}
                       >
                         {task.important ? <Star /> : <StarBorder />}
                       </IconButton>
+                      <span className="bottom-0 end-0 pb-1 pe-2 position-absolute">
+                        {formatDate(task.createdAt)}
+                      </span>
                     </div>
                   </div>
                 )
               })}
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>Completed Tasks</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {tasks
-                  .filter((e) => e.completed)
-                  .map((task) => {
-                    return (
-                      <div
-                        className="task d-flex my-3"
-                        key={task._id}
-                        data-id={task._id}
-                        onClick={(e) => {
-                          // console.log(
-                          //   (e.target as any).querySelector('h6').innerText,
-                          //   '❤',
-                          // )
-                          // setInfo((e.target as any).querySelector('h6').innerText)
-                          setSelectedTask(task)
-                          setRightPanelCollapsed(false)
-                        }}
-                      >
-                        <IconButton
-                          onClick={() =>
-                            updateTask(
-                              task._id,
-                              { completed: false },
-                              'Task Incomplete',
-                            )
-                          }
+            {tasks.find((e) => e.completed) && (
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMore />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Completed Tasks</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {tasks
+                    .filter((e) => e.completed)
+                    .map((task) => {
+                      return (
+                        <div
+                          className="task d-flex my-3"
+                          key={task._id}
+                          data-id={task._id}
+                          onClick={() => {
+                            setSelectedTask(task)
+                            setRightPanelCollapsed(false)
+                          }}
                         >
-                          <CheckCircle />
-                        </IconButton>
-                        <div className="exactTask p-3 d-flex justify-content-between">
-                          <div>
-                            <h6>{task.title}</h6>
-                            <span>{task.note && <Assignment />}</span>
-                            {task.due_date && (
-                              <span>{formatDueDate(task.due_date)}</span>
-                            )}
-                          </div>
                           <IconButton
                             onClick={() =>
                               updateTask(
                                 task._id,
-                                { important: !task.important },
-                                task.important
-                                  ? 'Task removed from Important'
-                                  : 'Task Added to Important',
+                                { completed: false },
+                                'Task Incomplete',
                               )
                             }
                           >
-                            {task.important ? <Star /> : <StarBorder />}
+                            <CheckCircle />
                           </IconButton>
+                          <div className="exactTask p-3 d-flex justify-content-between">
+                            <div>
+                              <h6>{task.title}</h6>
+                              <span>{task.note && <Assignment />}</span>
+                              {task.due_date && (
+                                <span>{formatDate(task.due_date)}</span>
+                              )}
+                            </div>
+                            <IconButton
+                              onClick={() =>
+                                updateTask(
+                                  task._id,
+                                  { important: !task.important },
+                                  task.important
+                                    ? 'Task removed from Important'
+                                    : 'Task Added to Important',
+                                )
+                              }
+                            >
+                              {task.important ? <Star /> : <StarBorder />}
+                            </IconButton>
+                          </div>
                         </div>
-                      </div>
-                    )
-                  })}
-              </AccordionDetails>
-            </Accordion>
+                      )
+                    })}
+                </AccordionDetails>
+              </Accordion>
+            )}
           </>
         ) : (
           <div className="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-          <Air sx={{ fontSize: 100 }}/>
-          <h1>No Tasks</h1>
+            <Air sx={{ fontSize: 100 }} />
+            <h1>No Tasks</h1>
           </div>
         )}
       </div>
@@ -337,7 +401,6 @@ function TaskList({
       <Box className="addTaskBox d-flex align-items-center">
         <IconButton
           onClick={() => {
-            // setNewTaskInputValue("")
             setNewTask(inputText)
             setInputText('')
           }}
@@ -346,7 +409,6 @@ function TaskList({
         </IconButton>
         <TextField
           onChange={(e) => {
-            // setNewTaskInputValue("")
             setInputText(e.target.value)
           }}
           value={inputText}
